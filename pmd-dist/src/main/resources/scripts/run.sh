@@ -218,4 +218,17 @@ cygwin_paths
 
 java_heapsize_settings
 
-java ${HEAPSIZE} ${PMD_JAVA_OPTS} $(jre_specific_vm_options) -cp "${classpath}" "${CLASSNAME}" "$@"
+
+cleanup() {
+  echo "shutting down..."
+}
+
+trap 'trap " " SIGTERM; kill 0; wait; cleanup' SIGINT SIGTERM
+
+
+java ${HEAPSIZE} ${PMD_JAVA_OPTS} $(jre_specific_vm_options) -cp "${classpath}" "${CLASSNAME}" "$@" &
+
+wait
+
+
+
